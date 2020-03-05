@@ -1,0 +1,26 @@
+1
+Inside an Inn
+You are standing inside an inn after a long day of slaying monsters. The glowing fireplace helping to light and warm the room. 
+A trapdoor leads down to the basement where black market trades are made throughout the night. To your south a door leads out of the inn to the Town Square,
+you hear the sound of laughter and drums through the door coming from the festival taking place there.
+-----
+South	2
+IN	3
+
+2
+Town Square
+You are at the center of the town,where people are dancing and drinking to their hearts content. Street merchants make a killing from this festival.
+You can smell the savory meats that the merchants are selling.
+Many people are offering you gifts in return for your services as an adventurer.
+You can see the back entrance to the inn basement.
+-----
+North	1
+In	3/Skeleton_Key
+
+3
+Inn Basement
+You are inside the basement of the inn, home of blackmarket trading. In the corner of your vision you can see people gambling their earnings away.
+At the merchants you see a stash of stolen items up for sale, along with contraband exotic beasts. 
+-----
+Upstairs	1
+

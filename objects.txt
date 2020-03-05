@@ -1,0 +1,12 @@
+Heavy_Coin_Pouch
+The pouch contains many shimmering gold coins. Could fetch a high price amongst merchants.
+1
+Skeleton_Key
+An old skeleton key.
+2
+Steel_Sword
+A one handed steel sword. Could be useful in the future.
+3
+
+
+
