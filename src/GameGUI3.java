@@ -49,7 +49,7 @@ public class GameGUI3 {
 		gameText.setText("Game output goes here");	//set the text for now
 		window.add(gameText,BorderLayout.CENTER);
 		
-		
+		//added a change for git
 		/*
 		 * South Panel Setup
 		 */
