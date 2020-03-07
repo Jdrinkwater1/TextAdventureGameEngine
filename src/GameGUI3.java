@@ -24,7 +24,14 @@ public class GameGUI3 {
 	
 	private JLabel gameLabel;
 					
-	
+	public GameGUI3()
+	{
+		JFrame window = new JFrame("TextAdventure");
+		window.setSize(500,700);
+		window.setVisible(true);
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+	}
 	
 	
 	public static void main(String[] args) {
