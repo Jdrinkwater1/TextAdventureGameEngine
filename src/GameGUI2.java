@@ -17,6 +17,7 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.Color;
+import javax.swing.JList;
 
 public class GameGUI2 {
 
@@ -84,28 +85,13 @@ public class GameGUI2 {
 		gbc_helpButton.gridy = 0;
 		panel.add(helpButton, gbc_helpButton);
 		
-		JTree Inventorytree = new JTree();
-		Inventorytree.setModel(new DefaultTreeModel(
-			new DefaultMutableTreeNode("Inventory") {
-				/**
-				 * 
-				 */
-				private static final long serialVersionUID = 1L;
-
-				{
-					DefaultMutableTreeNode node_1;
-					node_1 = new DefaultMutableTreeNode("Items");
-						node_1.add(new DefaultMutableTreeNode(""));
-					add(node_1);
-				}
-			}
-		));
-		GridBagConstraints gbc_Inventorytree = new GridBagConstraints();
-		gbc_Inventorytree.insets = new Insets(0, 0, 5, 0);
-		gbc_Inventorytree.fill = GridBagConstraints.BOTH;
-		gbc_Inventorytree.gridx = 0;
-		gbc_Inventorytree.gridy = 1;
-		panel.add(Inventorytree, gbc_Inventorytree);
+		JList list = new JList();
+		GridBagConstraints gbc_list = new GridBagConstraints();
+		gbc_list.insets = new Insets(0, 0, 5, 0);
+		gbc_list.fill = GridBagConstraints.BOTH;
+		gbc_list.gridx = 0;
+		gbc_list.gridy = 1;
+		panel.add(list, gbc_list);
 		
 		JButton lookButton = new JButton("Look");
 		GridBagConstraints gbc_lookButton = new GridBagConstraints();
