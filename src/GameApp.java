@@ -1,3 +1,5 @@
+
+
 /**
  * 
  */
@@ -9,7 +11,6 @@
  */
 import java.io.*;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 public class GameApp {
 
 	/**
@@ -22,7 +23,7 @@ public class GameApp {
 		String fileName = nameInput.nextLine();
 		
 		File rooms = new File(fileName+".txt");			//reads in the file
-		File objects = new File("objects.txt");
+		File objects = new File(fileName+"objects.txt");
 		String roomName,
 			   description;
 		int roomID;
@@ -246,7 +247,7 @@ public class GameApp {
 					{
 						if(roomArr[currentRoom].getMovements().get(i).needsObjects())
 						{
-							//System.out.println("Hit required object");
+							System.out.println("Hit required object");
 							for(int index = 0; index < listOfObjects.size();index++)
 							{
 								if(listOfObjects.get(index).toString().contains((roomArr[currentRoom].getMovements().get(i).getRequiredObject())))
@@ -260,24 +261,14 @@ public class GameApp {
 								
 							}
 						}
-						if(!roomArr[currentRoom].getMovements().get(i).needsObjects()) {	//if the current room does not need objects to mvoe to it
-							
+						else {
 							System.out.println(currentRoom);
-							movement tempMove = roomArr[currentRoom].getMovements().get(i);	//get the movements for the current room and get the movement in that index 
+							movement tempMove = roomArr[currentRoom].getMovements().get(i);
 							System.out.println(tempMove);
 							currentRoom= tempMove.getRoomID() -1;
 							System.out.println(currentRoom);
 						
-						}
-						else {
-							System.out.println("Required item not in invetory.");
-							try {
-								Thread.sleep(2000);						//make the program sleep for 2 seconds
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
+					}
 					}
 				}
 				
