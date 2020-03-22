@@ -11,12 +11,18 @@
  */
 import java.io.*;
 import java.util.*;
+
+import org.json.simple.JSONArray; 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException; 
 public class GameApp {
 
 	/**
 	 * @param args
+	 * @throws IOException 
 	 */
-	public static void main(String[] args) throws IndexException {
+	public static void main(String[] args) throws IndexException, IOException {
 		
 		Scanner nameInput = new Scanner(System.in);
 		System.out.println("Enter the game you want to play: ");
@@ -236,6 +242,17 @@ public class GameApp {
 					
 				}
 			break;
+			case("SAVE"):
+				JSONObject jo = new JSONObject();
+				
+				BufferedWriter bw = new BufferedWriter(new FileWriter(new File("Save.json")));
+				jo.put("CurrentRoom", currentRoom);
+				for(int i = 0; i<listOfObjects.size();i++)
+				{
+					jo.put("Inventory", listOfObjects.get(i));
+				}
+				bw.write(jo.toJSONString()+"\n");
+				break;
 			default:
 				for(int i = 0; i < roomArr[currentRoom].getMovements().size();i++)
 				{
