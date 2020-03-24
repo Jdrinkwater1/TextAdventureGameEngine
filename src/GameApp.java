@@ -21,8 +21,9 @@ public class GameApp {
 	/**
 	 * @param args
 	 * @throws IOException 
+	 * @throws ParseException 
 	 */
-	public static void main(String[] args) throws IndexException, IOException {
+	public static void main(String[] args) throws IndexException, IOException, ParseException {
 		
 		Scanner nameInput = new Scanner(System.in);
 		System.out.println("Enter the game you want to play: ");
@@ -252,7 +253,29 @@ public class GameApp {
 					jo.put("Inventory", listOfObjects.get(i));
 				}
 				bw.write(jo.toJSONString()+"\n");
+				bw.close();
 				break;
+		
+			
+			/*
+			 * Problem below line 269
+			 */
+			case("LOAD"):
+				File saveLoad = new File("Save.json");	//read in a new file
+				BufferedReader br = new BufferedReader(new FileReader(saveLoad));	//make a new buffered reader
+				String line = "";			//initialize the int
+				while((line = br.readLine())!=null)
+				{
+				Object obj = new JSONParser().parse(line);	//make the line a json object
+				jo = (JSONObject) obj;
+				
+				int readRoom = (int) jo.get("CurrentRoom");
+				System.out.println(readRoom);
+				GameObject readObject = (GameObject) jo.get("Inventory");
+				System.out.println(readObject);
+				
+				
+				}
 			default:
 				for(int i = 0; i < roomArr[currentRoom].getMovements().size();i++)
 				{
