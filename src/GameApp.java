@@ -309,7 +309,7 @@ public class GameApp {
 						}	
 					}
 				
-				//currentRoom = (int) readRoom;	//set current room
+			
 				
 				
 				}
