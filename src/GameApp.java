@@ -10,6 +10,7 @@
  *	2/9/20
  */
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.*;
 
 import org.json.simple.JSONArray; 
@@ -248,12 +249,24 @@ public class GameApp {
 				
 				BufferedWriter bw = new BufferedWriter(new FileWriter(new File("Save.json")));
 				jo.put("CurrentRoom", currentRoom);
-				for(int i = 0; i<listOfObjects.size();i++)
+				
+				//for items in inventory
+				JSONArray ja = new JSONArray();
+				Map m;
+				for(GameObject gameobj:listOfObjects)
 				{
-					jo.put("Inventory", listOfObjects.get(i));
+					m = new LinkedHashMap(3);
+					m.put("objName", gameobj.getName());
+					m.put("description", gameobj.getDescription());
+					m.put("roomNumber",gameobj.getInitialLocation());
+					//add the map to json array
+					ja.add(m);
 				}
+				jo.put("Inventory", ja);
+				
 				bw.write(jo.toJSONString()+"\n");
 				bw.close();
+				System.out.println("Current room and inventory saved");
 				break;
 		
 			
@@ -263,16 +276,40 @@ public class GameApp {
 			case("LOAD"):
 				File saveLoad = new File("Save.json");	//read in a new file
 				BufferedReader br = new BufferedReader(new FileReader(saveLoad));	//make a new buffered reader
-				String line = "";			//initialize the int
+				String line = "";			//initialize the string
 				while((line = br.readLine())!=null)
 				{
 				Object obj = new JSONParser().parse(line);	//make the line a json object
 				jo = (JSONObject) obj;
 				
-				int readRoom = (int) jo.get("CurrentRoom");
-				System.out.println(readRoom);
-				GameObject readObject = (GameObject) jo.get("Inventory");
-				System.out.println(readObject);
+				long readRoom = (long) jo.get("CurrentRoom");
+				currentRoom = (int) readRoom;
+				Iterator<Map.Entry> itr1;
+				ja = (JSONArray) jo.get("inventory");	//type cast to JSONArray
+				Iterator itr2 = ja.iterator();
+				while (itr2.hasNext())
+				{
+					itr1 = ((Map) itr2.next()).entrySet().iterator();
+					Map.Entry pair = itr1.next();
+					
+					long objRoom = (long)pair.getValue();
+					int objRoomInt =(int)objRoom;
+					pair = itr1.next();
+					String desc = (String) pair.getValue();
+					pair = itr1.next();
+					String name = (String)pair.getValue();
+					//System.out.println(objRoom+desc+name);
+					try {
+						listOfObjects.add(roomArr[objRoomInt-1].getObject(name));
+						roomArr[objRoomInt-1].removeObject(roomArr[objRoomInt-1].getObject(name));//in the current room remove the object thats in the room that matches the given item name
+						}
+						catch(RemoveException e)
+						{
+							System.out.println(e.getMessage());
+						}	
+					}
+				
+				//currentRoom = (int) readRoom;	//set current room
 				
 				
 				}
