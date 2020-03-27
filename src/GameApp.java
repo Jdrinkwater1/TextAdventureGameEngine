@@ -1,5 +1,3 @@
-
-
 /**
  * 
  */
@@ -125,7 +123,7 @@ public class GameApp {
 				
 				//************   Jacob, look here   **********************
 				//put out a statement to screen to indicate an object is being added to a room
-				System.out.println("Adding... "+obj + " to room " + itemRoomNum);
+				//System.out.println("Adding... "+obj + " to room " + itemRoomNum);
 				roomArr[itemRoomNum-1].addObject(obj);     //  add the object to the appropriate room.    If room 1, then subscript 0   thus  room minus 1
 			}
 			 // System.out.println("*******Number of objects in room 1********");
@@ -139,13 +137,9 @@ public class GameApp {
 			  			 * 
 			  			 
                          GameObject test = roomArr[0].getObject(0);
-
                          System.out.println("got object from room 1.  It is: " + test);
-
                          System.out.println("\nnow going to remove it from room 1");
-
                         roomArr[0].removeObject(test);
-
                          System.out.println("Room 1 data is now:  " + roomArr[0]);
                          
                         roomArr[1].addObject(test);
@@ -173,14 +167,14 @@ public class GameApp {
             
 		
 		//Go through all the rooms and print them all.
-		System.out.println("************ Do the rooms have the right items in them...   ***************");
-		for (int i = 0; i < roomIndex; i++)
-		{
-			System.out.println(roomArr[i]);
-			System.out.println("__________________\n");
-		}
-		System.out.println("*******Objects in room 1********");
-		System.out.println(roomArr[0].getObjectCount());
+		//System.out.println("************ Do the rooms have the right items in them...   ***************");
+		//for (int i = 0; i < roomIndex; i++)
+		//{
+		//	System.out.println(roomArr[i]);
+		//	System.out.println("__________________\n");
+		//}
+		//System.out.println("*******Objects in room 1********");
+		//System.out.println(roomArr[0].getObjectCount());
 		
 		
 		/*
@@ -285,8 +279,9 @@ public class GameApp {
 				long readRoom = (long) jo.get("CurrentRoom");
 				currentRoom = (int) readRoom;
 				Iterator<Map.Entry> itr1;
-				ja = (JSONArray) jo.get("inventory");	//type cast to JSONArray
-				Iterator itr2 = ja.iterator();
+				JSONArray jaIn = (JSONArray) jo.get("Inventory");		
+				jaIn = (JSONArray) jo.get("Inventory");	//type cast to JSONArray
+				Iterator itr2 = jaIn.iterator();
 				while (itr2.hasNext())
 				{
 					itr1 = ((Map) itr2.next()).entrySet().iterator();
@@ -356,4 +351,3 @@ public class GameApp {
 	
 	}
 }
-
