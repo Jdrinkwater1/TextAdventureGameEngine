@@ -200,7 +200,7 @@ public class GameApp {
 				System.exit(0);	//quits the program
 			break;
 			case ("HELP"):
-				System.out.println("Available commands are: Quit,Help,Inventory,Look,Take,Drop");
+				System.out.println("Available commands are: Quit,Help,Inventory,Look,Take,Drop,Save, and Load");
 			break;
 			case("INVENTORY"):
 				System.out.println(listOfObjects);
@@ -319,26 +319,26 @@ public class GameApp {
 					{
 						if(roomArr[currentRoom].getMovements().get(i).needsObjects())
 						{
-							System.out.println("Hit required object");
+							//System.out.println("Hit required object");
 							for(int index = 0; index < listOfObjects.size();index++)
 							{
 								if(listOfObjects.get(index).toString().contains((roomArr[currentRoom].getMovements().get(i).getRequiredObject())))
 								{
-									System.out.println(currentRoom); 
+									//System.out.println(currentRoom); 
 									movement tempMove = roomArr[currentRoom].getMovements().get(i);
-									System.out.println(tempMove);
+									//System.out.println(tempMove);
 									currentRoom= tempMove.getRoomID() -1;
-									System.out.println(currentRoom);
+									//System.out.println(currentRoom);
 								}
 								
 							}
 						}
 						else {
-							System.out.println(currentRoom);
+							//System.out.println(currentRoom);
 							movement tempMove = roomArr[currentRoom].getMovements().get(i);
-							System.out.println(tempMove);
+							//System.out.println(tempMove);
 							currentRoom= tempMove.getRoomID() -1;
-							System.out.println(currentRoom);
+							//System.out.println(currentRoom);
 						
 					}
 					}
