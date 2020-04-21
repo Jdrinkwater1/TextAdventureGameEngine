@@ -15,6 +15,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException; 
+import javax.swing.JFileChooser;
 public class GameApp {
 
 	/**
@@ -27,14 +28,46 @@ public class GameApp {
 		Scanner nameInput = new Scanner(System.in);
 		System.out.println("Enter the game you want to play: ");
 		String fileName = nameInput.nextLine();
-		
 		File rooms = new File(fileName+".txt");			//reads in the file
 		File objects = new File(fileName+"objects.txt");
+		File startup = new File(fileName+"data.dat");
+	
+		JFileChooser dialogbox = new JFileChooser();
+		dialogbox.setSelectedFile(new File(fileName+"data.dat"));
+		
 		String roomName,
 			   description;
 		int roomID;
 		int roomIndex = 0;
 		Room roomArr[]=new Room[30];		//can have a total of 30 rooms
+		int gamesPlayed = 0;
+		String lastGamePlayed = "";
+		String date = "";
+		/*
+		 * Binary file writing and reading
+		 */
+		try(DataInputStream input = new DataInputStream(new FileInputStream(startup)))
+		{
+			gamesPlayed = input.readInt();
+			for (int i = 0; i<15; i++)
+				lastGamePlayed += input.readChar();
+			
+			for (int i = 0; i<15; i++)
+				date += input.readChar();
+			System.out.println("Number of games played:"+gamesPlayed+" Last Game Played:"+lastGamePlayed+" Last Played:"+date);
+			
+		}
+		//if there is no file make one and write data to it
+		catch(FileNotFoundException e)
+		{
+			System.out.println("No file found... Creating file");
+			try(DataOutputStream output = new DataOutputStream(new FileOutputStream(startup)))
+			{
+				output.writeInt(gamesPlayed);	//write the games played
+				output.writeChars(String.format("%15s",fileName));	//writing the last game played
+				output.writeChars(String.format("%15s",java.time.LocalDate.now().toString()));	//writing the current date
+			}
+		}
 		
 		ArrayList<GameObject> listOfObjects = new ArrayList<GameObject>();
 		try(Scanner s = new Scanner(rooms))
@@ -195,6 +228,12 @@ public class GameApp {
 			switch (userInput) 
 			{
 			case "QUIT":
+				try(DataOutputStream output = new DataOutputStream(new FileOutputStream(startup)))
+				{
+					output.writeInt(gamesPlayed +1);	//write the games played
+					output.writeChars(String.format("%15s",fileName));	//writing the last game played
+					output.writeChars(String.format("%15s",java.time.LocalDate.now().toString()));	//writing the current date
+				}
 				System.out.println("Closing the program...");
 				done = true;
 				System.exit(0);	//quits the program
