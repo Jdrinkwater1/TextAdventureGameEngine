@@ -9,6 +9,8 @@
  */
 import java.io.*;
 import java.lang.reflect.Array;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 
 import org.json.simple.JSONArray; 
@@ -22,8 +24,9 @@ public class GameApp {
 	 * @param args
 	 * @throws IOException 
 	 * @throws ParseException 
+	 * @throws InterruptedException 
 	 */
-	public static void main(String[] args) throws IndexException, IOException, ParseException {
+	public static void main(String[] args) throws IndexException, IOException, ParseException, InterruptedException {
 		
 		Scanner nameInput = new Scanner(System.in);
 		System.out.println("Enter the game you want to play: ");
@@ -31,10 +34,7 @@ public class GameApp {
 		File rooms = new File(fileName+".txt");			//reads in the file
 		File objects = new File(fileName+"objects.txt");
 		File startup = new File(fileName+"data.dat");
-	
-		JFileChooser dialogbox = new JFileChooser();
-		dialogbox.setSelectedFile(new File(fileName+"data.dat"));
-		
+		File analytics = new File(fileName+"analytics.dat");
 		String roomName,
 			   description;
 		int roomID;
@@ -43,6 +43,11 @@ public class GameApp {
 		int gamesPlayed = 0;
 		String lastGamePlayed = "";
 		String date = "";
+		String andate = "";
+		double timePlayed = 0;
+		String gameName ="";
+		String angameName ="";
+		Duration timeElapsed;
 		/*
 		 * Binary file writing and reading
 		 */
@@ -61,6 +66,7 @@ public class GameApp {
 		catch(FileNotFoundException e)
 		{
 			System.out.println("No file found... Creating file");
+			Thread.sleep(250);
 			try(DataOutputStream output = new DataOutputStream(new FileOutputStream(startup)))
 			{
 				output.writeInt(gamesPlayed);	//write the games played
@@ -69,6 +75,7 @@ public class GameApp {
 			}
 		}
 		
+		Instant start = Instant.now();
 		ArrayList<GameObject> listOfObjects = new ArrayList<GameObject>();
 		try(Scanner s = new Scanner(rooms))
 		{
@@ -159,32 +166,7 @@ public class GameApp {
 				//System.out.println("Adding... "+obj + " to room " + itemRoomNum);
 				roomArr[itemRoomNum-1].addObject(obj);     //  add the object to the appropriate room.    If room 1, then subscript 0   thus  room minus 1
 			}
-			 // System.out.println("*******Number of objects in room 1********");
-
-			
-
-			  //System.out.println(roomArr[0].getObjectCount());
-
-          
-			  			/*
-			  			 * 
-			  			 
-                         GameObject test = roomArr[0].getObject(0);
-                         System.out.println("got object from room 1.  It is: " + test);
-                         System.out.println("\nnow going to remove it from room 1");
-                        roomArr[0].removeObject(test);
-                         System.out.println("Room 1 data is now:  " + roomArr[0]);
-                         
-                        roomArr[1].addObject(test);
-                         
-                         System.out.println("***Room 2 with new object:***"+"\n"+"\n"+roomArr[1]);
-                        
-                         
-                         System.out.println("\n"+"***Testing object count***");
-                         System.out.println(roomArr[0].getObjectCount());
-                         System.out.println("\n"+"***Contains object test***");
-                         System.out.println(roomArr[0].containsObject(test));
-              */
+			 
 	
 		
 		
@@ -199,20 +181,7 @@ public class GameApp {
 		
             
 		
-		//Go through all the rooms and print them all.
-		//System.out.println("************ Do the rooms have the right items in them...   ***************");
-		//for (int i = 0; i < roomIndex; i++)
-		//{
-		//	System.out.println(roomArr[i]);
-		//	System.out.println("__________________\n");
-		//}
-		//System.out.println("*******Objects in room 1********");
-		//System.out.println(roomArr[0].getObjectCount());
 		
-		
-		/*
-		 * Command testing
-		 */
 		
 		boolean done = false;
 		int currentRoom = 0;	// the room that the player is standing in
@@ -233,6 +202,19 @@ public class GameApp {
 					output.writeInt(gamesPlayed +1);	//write the games played
 					output.writeChars(String.format("%15s",fileName));	//writing the last game played
 					output.writeChars(String.format("%15s",java.time.LocalDate.now().toString()));	//writing the current date
+				
+					
+				}
+				try(RandomAccessFile io = new RandomAccessFile(analytics,"rw"))
+				{
+				Instant endTime = Instant.now();
+				timeElapsed = Duration.between(start,endTime);
+				timePlayed += timeElapsed.getSeconds()/60;
+				angameName = fileName;
+				io.seek(io.length());
+				io.writeChars(String.format("%15s",angameName));
+				io.writeChars(String.format("%15s", java.time.LocalDate.now().toString()));
+				io.writeDouble(timePlayed);
 				}
 				System.out.println("Closing the program...");
 				done = true;
@@ -347,6 +329,93 @@ public class GameApp {
 				
 				
 				}
+			case("ANALYTICS"):
+				try(RandomAccessFile io = new RandomAccessFile(analytics,"rw"))
+				{
+					int positon = 0;
+					angameName = "";	//resetting the game name
+					andate="";	//resetting the date string
+					Boolean anDone = false;
+					System.out.println("Number of records in file: "+ io.length()/68); //each record is 68 bytes divide by length of total file size
+					
+					for(int i = 0; i<15; i++)
+						angameName += io.readChar();	//append game name for each char 
+					for(int i = 0; i<15; i++)
+						andate += io.readChar();	//append date for each char (set length of 15)
+					timePlayed = io.readDouble();	//read in the  double
+					System.out.println("\nGame Played: "+angameName+"\nDate Last Played: "+andate+"\nTotal time played: "+timePlayed);
+					io.seek(0);	//return back to 0
+					System.out.println("Available Commands:Last,Next,Previous,Return");
+					Scanner anInput = new Scanner(System.in);	//make a new scanner to get info in
+					while(!anDone)
+					{
+					System.out.println("Enter a command: ");
+					String userAnInput = input.nextLine().toUpperCase();	//make all userinputs uppcase
+					switch(userAnInput) {
+					case("NEXT"):
+						andate="";	//reset date string
+						angameName = "";	//reset game name
+						positon += 68;	// set positon to next record
+						if(positon < io.length() && positon > 0 )
+						{	
+							io.seek(positon);	//seek to next record
+							for(int i = 0; i<15; i++)
+								angameName += io.readChar();
+							
+							for(int i = 0; i<15; i++)
+								andate += io.readChar();
+						
+							timePlayed = io.readDouble();
+							System.out.println("\nGame PLayed: "+angameName+"\nDate Last Played: "+andate+"\nTotal time played: "+timePlayed);
+						}
+						else
+							System.out.println("No more records available.");
+						
+					break;
+					case("PREVIOUS"):
+						andate="";
+						angameName = "";
+						positon -= 68;
+						if(positon < io.length() && positon > 0 )
+						{	
+							
+							io.seek(positon);
+							for(int i = 0; i<15; i++)
+								angameName += io.readChar();
+							
+							for(int i = 0; i<15; i++)
+								andate += io.readChar();
+							
+							timePlayed = io.readDouble();
+							System.out.println("\nGame PLayed: "+angameName+"\nDate Last Played: "+andate+"\nTotal time played: "+timePlayed);
+						}
+						else
+							System.out.println("At the first record");
+					break;
+					case("LAST"):
+						andate="";
+						angameName = "";
+						positon = (int) (io.length()-68);
+					io.seek(positon);
+					for(int i = 0; i<15; i++)
+						angameName += io.readChar();
+					
+					for(int i = 0; i<15; i++)
+						andate += io.readChar();
+					
+					timePlayed = io.readDouble();
+					System.out.println("\nGame PLayed: "+angameName+"\nDate Last Played: "+andate+"\nTotal time played: "+timePlayed);
+					break;
+					case("RETURN"):
+						anDone= true;
+					}
+					}
+				}
+			catch(EOFException e)
+			{
+				System.out.println("******HIT EOF********");
+				e.getStackTrace();
+			}
 			default:
 				for(int i = 0; i < roomArr[currentRoom].getMovements().size();i++)
 				{
